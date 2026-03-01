@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYSEN Hackathon 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ee;
+    --surface: #ffffff;
+    --surface2: #faf8f5;
+    --border: #e8e2d9;
+    --text: #1a1714;
+    --muted: #9a9088;
+    --a1: #e85d26;
+    --a2: #1a7a5e;
+    --a3: #2d5fa6;
+    --a1-light: #fdf0eb;
+    --a2-light: #eaf4f0;
+    --a3-light: #eaf0fa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle, #ccc5bb 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header {
+    padding: 80px 0 56px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(48px, 7vw, 80px);
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .title em {
+    font-style: italic;
+    color: var(--a1);
+  }
+
+  .header-right {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .date-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--text);
+    color: #fff;
+    border-radius: 100px;
+    padding: 10px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .date-pill .live-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #5dffa0;
+    animation: blink 1.8s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .themes {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 80px;
+  }
+
+  .theme-card {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+    animation: rise 0.5s ease both;
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+
+  .theme-card:nth-child(1) { animation-delay: 0.05s; }
+  .theme-card:nth-child(2) { animation-delay: 0.15s; }
+  .theme-card:nth-child(3) { animation-delay: 0.25s; }
+
+  .theme-card:hover {
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .theme-header {
+    display: flex;
+    align-items: center;
+  }
+
+  .theme-num-block {
+    width: 90px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 0;
+    border-right: 1.5px solid var(--border);
+  }
+
+  .theme-num {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 44px;
+    line-height: 1;
+  }
+
+  .t1 .theme-num { color: var(--a1); }
+  .t2 .theme-num { color: var(--a2); }
+  .t3 .theme-num { color: var(--a3); }
+
+  .theme-meta {
+    flex: 1;
+    padding: 24px 28px;
+  }
+
+  .theme-label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .theme-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 6px;
+    display: inline-block;
+    width: fit-content;
+  }
+  .t1 .theme-tag { background: var(--a1-light); color: var(--a1); }
+  .t2 .theme-tag { background: var(--a2-light); color: var(--a2); }
+  .t3 .theme-tag { background: var(--a3-light); color: var(--a3); }
+
+  .theme-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  .theme-body {
+    border-top: 1.5px solid var(--border);
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+
+  .desc {
+    padding: 28px 32px;
+    border-right: 1.5px solid var(--border);
+  }
+
+  .desc p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #4a4540;
+    margin-bottom: 12px;
+  }
+
+  .desc p:last-child { margin-bottom: 0; }
+
+  .t1 .desc .cta { color: var(--a1); font-weight: 600; }
+  .t2 .desc .cta { color: var(--a2); font-weight: 600; }
+  .t3 .desc .cta { color: var(--a3); font-weight: 600; }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-section {
+    padding: 22px 28px;
+  }
+
+  .sidebar-section + .sidebar-section {
+    border-top: 1.5px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .query-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .query-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #555;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .q-arrow {
+    font-style: normal;
+    font-size: 11px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .t1 .q-arrow { color: var(--a1); }
+  .t2 .q-arrow { color: var(--a2); }
+  .t3 .q-arrow { color: var(--a3); }
+
+  .source-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .source-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .s-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    letter-spacing: 0.05em;
+  }
+  .t1 .s-chip { background: var(--a1-light); color: var(--a1); }
+  .t2 .s-chip { background: var(--a2-light); color: var(--a2); }
+  .t3 .s-chip { background: var(--a3-light); color: var(--a3); }
+
+  /* Links inside source items */
+  .source-item a {
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+  .t1 .source-item a { color: var(--a1); }
+  .t2 .source-item a { color: var(--a2); }
+  .t3 .source-item a { color: var(--a3); }
+  .source-item a:hover { border-bottom-color: currentColor; }
+
+  footer {
+    text-align: center;
+    padding: 36px 0 56px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    border-top: 1.5px solid var(--border);
+  }
+
+  @media (max-width: 760px) {
+    header { flex-direction: column; align-items: flex-start; }
+    .header-right { text-align: left; }
+    .theme-body { grid-template-columns: 1fr; }
+    .desc { border-right: none; border-bottom: 1.5px solid var(--border); }
+    .theme-meta { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-left">
+      <p class="eyebrow">Cornell Systems Engineering · 2026</p>
+      <h1 class="title">SYSEN<br><em>Hackathon</em></h1>
+    </div>
+    <div class="header-right">
+      <div class="date-pill"><span class="live-dot"></span> MARCH 6–7, 2026</div>
+      <p class="subtitle">Choose your theme and build something real.</p>
+    </div>
+  </header>
+
+  <div class="themes">
+
+    <!-- ── THEME 1 ── -->
+    <div class="theme-card t1">
+      <div class="theme-header">
+        <div class="theme-num-block">
+          <span class="theme-num">1</span>
+        </div>
+        <div class="theme-meta">
+          <div class="theme-label">
+            <span class="theme-tag">Industrial Logistics</span>
+            <span class="theme-name">AI-Augmented Delivery System</span>
+          </div>
+        </div>
+      </div>
+      <div class="theme-body">
+        <div class="desc">
+          <p>A global logistics company is struggling to track shipments in real time, predict delivery delays, and optimize warehouse routing across multiple distribution centers.</p>
+          <p>Your team's job is to build an AI-augmented delivery database system that ingests shipment records or synthetic logistics data to create live tracking profiles and generate actionable predictions for operations managers.</p>
+          <p>You pick the domain — everyday packages, semiconductor supply chains... or even beanie babies. If it ships, you can track it.</p>
+        </div>
+        <div class="sidebar">
+          <div class="sidebar-section">
+            <div class="section-label">Example Queries</div>
+            <div class="query-list">
+              <div class="query-item"><span class="q-arrow">→</span>"Which shipments are at highest risk of missing their delivery window in the next 48 hours?"</div>
+              <div class="query-item"><span class="q-arrow">→</span>"Under current warehouse load, when will Fulfillment Center B reach full capacity?"</div>
+              <div class="query-item"><span class="q-arrow">→</span>"How does this shipment's route compare to historical cases with similar delay risk factors?"</div>
+            </div>
+          </div>
+          <div class="sidebar-section">
+            <div class="section-label">Suggested Data Sources</div>
+            <div class="source-list">
+              <div class="source-item">
+                <span class="s-chip">DATA</span>
+                <span>Synthetic Logistics: <a href="https://faker.readthedocs.io/" target="_blank">Faker (Python)</a>, custom-generated shipment/order records</span>
+              </div>
+              <div class="source-item">
+                <span class="s-chip">API</span>
+                <span><a href="https://www.aftership.com/docs/tracking" target="_blank">AfterShip Tracking API</a>, <a href="https://www.easypost.com/tracking-api" target="_blank">EasyPost Tracking API</a>, <a href="https://www.shipengine.com/docs/" target="_blank">ShipStation API</a></span>
+              </div>
+              <div class="source-item">
+                <span class="s-chip">API</span>
+                <span><a href="https://www.census.gov/data/developers/data-sets.html" target="_blank">U.S. Census Bureau Trade Data API</a>, <a href="https://comtradeplus.un.org/" target="_blank">UN Comtrade</a></span>
+              </div>
+              <div class="source-item">
+                <span class="s-chip">API</span>
+                <span><a href="http://project-osrm.org/" target="_blank">OpenStreetMap / OSRM Routing API</a>, <a href="https://developers.google.com/maps/documentation/distance-matrix" target="_blank">Google Maps Distance Matrix API</a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── THEME 2 ── -->
+    <div class="theme-card t2">
+      <div class="theme-header">
+        <div class="theme-num-block">
+          <span class="theme-num">2</span>
+        </div>
+        <div class="theme-meta">
+          <div class="theme-label">
+            <span class="theme-tag">Digital Health</span>
+            <span class="theme-name">Patient Digital Twins</span>
+          </div>
+        </div>
+      </div>
+      <div class="theme-body">
+        <div class="desc">
+          <p>A regional hospital network is struggling to allocate ICU beds, predict readmissions, and manage appointment no-shows.</p>
+          <p>Your team's job is to build a data-driven platform that ingests structured health records or synthetic patient data to create 'digital twin' profiles and generate actionable predictions for clinical decision-makers.</p>
+        </div>
+        <div class="sidebar">
+          <div class="sidebar-section">
+            <div class="section-label">Example Queries</div>
+            <div class="query-list">
+              <div class="query-item"><span class="q-arrow">→</span>"Which patients in this cohort are at highest risk of 30-day readmission?"</div>
+              <div class="query-item"><span class="q-arrow">→</span>"Under today's admission forecast, when will ICU capacity reach 90%?"</div>
+              <div class="query-item"><span class="q-arrow">→</span>"How does this patient's profile compare to historical cases with similar risk factors?"</div>
+            </div>
+          </div>
+          <div class="sidebar-section">
+            <div class="section-label">Suggested Data Sources</div>
+            <div class="source-list">
+              <div class="source-item">
+                <span class="s-chip">DATA</span>
+                <span><a href="https://synthea.mitre.org/" target="_blank">Synthea</a> (open-source EHR generator), <a href="https://physionet.org/content/mimiciii-demo/1.4/" target="_blank">MIMIC-III Demo</a></span>
+              </div>
+              <div class="source-item">
+                <span class="s-chip">API</span>
+                <span><a href="https://protect-public.hhs.gov/" target="_blank">HHS Protect Public Data Hub</a>, <a href="https://data.cms.gov/provider-data/" target="_blank">CMS Hospital Compare API</a></span>
+              </div>
+              <div class="source-item">
+                <span class="s-chip">API</span>
+                <span><a href="https://wonder.cdc.gov/wonder/help/wonder-api.html" target="_blank">CDC WONDER API</a>, <a href="https://healthdata.gov/" target="_blank">HealthData.gov</a></span>
+              </div>
+              <div class="source-item">
+                <span class="s-chip">API</span>
+                <span>Live Feeds: <a href="https://hapi.fhir.org/" target="_blank">HAPI FHIR public test server</a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── THEME 3 ── -->
+    <div class="theme-card t3">
+      <div class="theme-header">
+        <div class="theme-num-block">
+          <span class="theme-num">3</span>
+        </div>
+        <div class="theme-meta">
+          <div class="theme-label">
+            <span class="theme-tag">NYC Urban Risk</span>
+            <span class="theme-name">Urban Early Warning System</span>
+          </div>
+        </div>
+      </div>
+      <div class="theme-body">
+        <div class="desc">
+          <p>The NYC Department of Emergency Management needs to act before small signals turn into citywide crises. Weather, hospital capacity, and transit data all exist — but they are disconnected and difficult to analyze together.</p>
+          <p>Your team's job is to build a cloud-based AI decision-support system that continuously pulls data from public APIs and stores it in a structured database organized by neighborhood and time. The system should use generative AI to produce short, decision-ready summaries. All predictions and risk scores must be stored and trackable over time.</p>
+          <p>The goal is not just a dashboard — it is a structured, queryable, AI-powered early warning system.</p>
+        </div>
+        <div class="sidebar">
+          <div class="sidebar-section">
+            <div class="section-label">Example Queries</div>
+            <div class="query-list">
+              <div class="query-item"><span class="q-arrow">→</span>"Which neighborhoods show rising heat and hospital strain?"</div>
+              <div class="query-item"><span class="q-arrow">→</span>"How does today compare to similar historical patterns?"</div>
+              <div class="query-item"><span class="q-arrow">→</span>"Where is the risk accelerating the fastest?"</div>
+            </div>
+          </div>
+          <div class="sidebar-section">
+            <div class="section-label">Suggested Data Sources</div>
+            <div class="source-list">
+              <div class="source-item">
+                <span class="s-chip">API</span>
+                <span><a href="https://www.ncei.noaa.gov/cdo-web/webservices/v2" target="_blank">NOAA Climate Data API</a>, <a href="https://www.weather.gov/documentation/services-web-api" target="_blank">National Weather Service API</a>, <a href="https://opendata.cityofnewyork.us/" target="_blank">NYC Open Data</a></span>
+              </div>
+              <div class="source-item">
+                <span class="s-chip">API</span>
+                <span><a href="https://data.cityofnewyork.us/Health/Emergency-Department-Visits-and-Admissions-for-Inf/2nwg-uqyg" target="_blank">NYC Open Data (ED visits)</a>, <a href="https://www.nyc.gov/site/doh/data/data-sets.page" target="_blank">NYC Dept. of Health</a>, <a href="https://ephtracking.cdc.gov/DataExplorer/" target="_blank">CDC Environmental Tracking</a></span>
+              </div>
+              <div class="source-item">
+                <span class="s-chip">API</span>
+                <span><a href="https://api.mta.info/" target="_blank">MTA Real-Time GTFS API</a>, <a href="https://data.cityofnewyork.us/Transportation/Subway-Stations/arq3-7z49" target="_blank">NYC Open Data – Subway</a></span>
+              </div>
+              <div class="source-item">
+                <span class="s-chip">API</span>
+                <span><a href="https://data.cityofnewyork.us/City-Government/Zip-Code-Boundaries/i8iw-xf4u" target="_blank">NYC ZIP Code Tabulation Areas</a>, <a href="https://www.census.gov/data/developers/data-sets.html" target="_blank">U.S. Census Bureau API</a></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    SYSEN 5381 &nbsp;·&nbsp; Data Science and AI for Systems Engineering &nbsp;·&nbsp; Cornell University &nbsp;·&nbsp; March 2026
+  </footer>
+
+</div>
+</body>
+</html>
